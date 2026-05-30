@@ -534,8 +534,11 @@ export default function App() {
       </footer>
 
       {/* Floating WhatsApp Button */}
+      {/* TODO: Replace the phone number below with your actual WhatsApp number, including the country code (e.g., 919876543210 for India) */}
       <a 
-        href="#" 
+        href="https://wa.me/919876543210?text=Hi!%20I%20would%20like%20to%20know%20more%20about%20Vihaanflow%20AI." 
+        target="_blank"
+        rel="noopener noreferrer"
         className="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 flex items-center justify-center"
         aria-label="Chat with us on WhatsApp"
       >
