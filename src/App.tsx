@@ -1,0 +1,546 @@
+import { useState } from "react";
+import { Boxes } from "@/components/ui/background-boxes";
+import { cn } from "@/lib/utils";
+import {
+  Menu,
+  X,
+  MessageCircle,
+  Clock,
+  TrendingUp,
+  Users,
+  CheckCircle,
+  Bot,
+  Calendar,
+  Smartphone,
+  Star,
+  ChevronDown,
+  Stethoscope
+} from "lucide-react";
+import { motion } from "framer-motion";
+
+export default function App() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [formState, setFormState] = useState({
+    clinicName: "",
+    name: "",
+    phone: "",
+    submitted: false,
+    loading: false
+  });
+
+  // TODO: Replace this URL with your Google Apps Script Web App URL
+  const GOOGLE_SCRIPT_URL = "";
+
+  const handleDemoSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!GOOGLE_SCRIPT_URL) {
+      // Fallback behavior if URL is not set
+      setFormState(prev => ({ ...prev, submitted: true }));
+      setTimeout(() => {
+        setFormState({ clinicName: "", name: "", phone: "", submitted: false, loading: false });
+      }, 3000);
+      return;
+    }
+
+    setFormState(prev => ({ ...prev, loading: true }));
+
+    try {
+      const formData = new FormData();
+      formData.append("ClinicName", formState.clinicName);
+      formData.append("Name", formState.name);
+      formData.append("WhatsApp", formState.phone);
+      formData.append("Timestamp", new Date().toLocaleString());
+
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        body: formData,
+        mode: "no-cors"
+      });
+
+      setFormState(prev => ({ ...prev, submitted: true, loading: false }));
+      setTimeout(() => {
+        setFormState({ clinicName: "", name: "", phone: "", submitted: false, loading: false });
+      }, 3000);
+    } catch (error) {
+      console.error("Error submitting form", error);
+      setFormState(prev => ({ ...prev, loading: false }));
+      alert("Error submitting request. Please try again.");
+    }
+  };
+
+  const toggleFaq = (index: number) => {
+    if (openFaq === index) {
+      setOpenFaq(null);
+    } else {
+      setOpenFaq(index);
+    }
+  };
+
+  return (
+    <div className="font-sans text-slate-800 bg-slate-50 min-h-screen">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <Stethoscope className="h-8 w-8 text-[#0EA5E9]" />
+              <span className="ml-2 text-xl font-bold text-[#1E3A5F]">Vihaanflow AI</span>
+            </div>
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#problem" className="text-slate-600 hover:text-[#0EA5E9]">The Problem</a>
+              <a href="#how-it-works" className="text-slate-600 hover:text-[#0EA5E9]">How it Works</a>
+              <a href="#features" className="text-slate-600 hover:text-[#0EA5E9]">Features</a>
+              <a href="#pricing" className="text-slate-600 hover:text-[#0EA5E9]">Pricing</a>
+              <a
+                href="#contact"
+                className="bg-[#0EA5E9] text-white px-5 py-2 rounded-full font-medium hover:bg-[#0284c7] transition-colors"
+              >
+                Book a Demo
+              </a>
+            </div>
+            <div className="md:hidden flex items-center">
+              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
+          </div>
+        </div>
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1">
+            <a href="#problem" className="block px-3 py-2 text-slate-600">The Problem</a>
+            <a href="#how-it-works" className="block px-3 py-2 text-slate-600">How it Works</a>
+            <a href="#features" className="block px-3 py-2 text-slate-600">Features</a>
+            <a href="#pricing" className="block px-3 py-2 text-slate-600">Pricing</a>
+            <a href="#contact" className="block px-3 py-2 mt-4 text-center bg-[#0EA5E9] text-white rounded-full font-medium">
+              Book a Demo
+            </a>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-slate-950 flex flex-col items-center justify-center min-h-[90vh]">
+        <div className="absolute inset-0 w-full h-full bg-slate-950 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+        <Boxes />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-30 text-center flex flex-col items-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 backdrop-blur-sm text-slate-300 text-sm font-medium mb-8"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Now accepting new clinics
+          </motion.div>
+
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 tracking-tight max-w-5xl mx-auto mb-6 leading-tight"
+          >
+            Turn Meta Ads into <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Booked Appointments</span> on Autopilot.
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-10 font-light"
+          >
+            The AI WhatsApp Chatbot built exclusively for Indian Dental Clinics. Never miss a lead, automate follow-ups, and fill your calendar 24/7.
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto"
+          >
+            <a href="#contact" className="group relative inline-flex items-center justify-center bg-gradient-to-r from-sky-500 to-blue-600 text-white px-8 py-4 rounded-full font-bold text-lg transition-all shadow-[0_0_40px_-10px_rgba(14,165,233,0.5)] hover:shadow-[0_0_60px_-10px_rgba(14,165,233,0.7)] hover:scale-105">
+              Book a Free Demo
+            </a>
+            <a href="#how-it-works" className="group inline-flex items-center justify-center bg-slate-800/50 hover:bg-slate-800 text-white border border-slate-700 px-8 py-4 rounded-full font-bold text-lg transition-all backdrop-blur-md hover:scale-105">
+              See How It Works
+            </a>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Problem Section */}
+      <section id="problem" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-[#1E3A5F]">Are you losing money on Meta Ads?</h2>
+            <p className="mt-4 text-lg text-slate-600">Running ads is easy, but converting leads is where most clinics fail.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-md transition-shadow">
+              <Clock className="h-10 w-10 text-rose-500 mb-4" />
+              <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">Slow Response Times</h3>
+              <p className="text-slate-600">Leads cool down if not contacted within 5 minutes. Your front desk is too busy to reply instantly.</p>
+            </div>
+            <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-md transition-shadow">
+              <Users className="h-10 w-10 text-rose-500 mb-4" />
+              <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">Wasted Ad Spend</h3>
+              <p className="text-slate-600">You pay for clicks, but people drop off because booking an appointment involves too much friction.</p>
+            </div>
+            <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-md transition-shadow">
+              <MessageCircle className="h-10 w-10 text-rose-500 mb-4" />
+              <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">No Follow-ups</h3>
+              <p className="text-slate-600">Manual follow-ups are tedious. Leads who need a gentle nudge are lost forever.</p>
+            </div>
+            <div className="bg-slate-50 p-8 rounded-2xl border border-slate-100 hover:shadow-md transition-shadow">
+              <TrendingUp className="h-10 w-10 text-rose-500 mb-4" />
+              <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">Unpredictable ROI</h3>
+              <p className="text-slate-600">Without a system to capture and convert, you have no idea if your marketing is actually working.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Solution Section */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center gap-16">
+            <div className="lg:w-1/2">
+              <h2 className="text-3xl font-bold text-[#1E3A5F] mb-6">The Solution: An AI Receptionist in their Pocket</h2>
+              <p className="text-lg text-slate-600 mb-8">
+                Vihaanflow AI connects directly to your Facebook and Instagram ads. The moment someone clicks, our bot engages them on WhatsApp, qualifies them, and books the appointment directly into your calendar.
+              </p>
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
+                  <span className="ml-3 text-slate-700">Instant responses 24/7, even on weekends and holidays.</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
+                  <span className="ml-3 text-slate-700">Conversational AI that sounds natural and professional.</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle className="h-6 w-6 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
+                  <span className="ml-3 text-slate-700">Automatic follow-ups for ghosted leads.</span>
+                </li>
+              </ul>
+            </div>
+            <div className="lg:w-1/2">
+              <img 
+                src="https://images.unsplash.com/photo-1555421689-d68471e189f2?q=80&w=2000&auto=format&fit=crop" 
+                alt="AI Chatbot Interface" 
+                className="rounded-2xl shadow-2xl"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section id="how-it-works" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-[#1E3A5F]">How It Works</h2>
+            <p className="mt-4 text-lg text-slate-600">From ad click to walking in the door.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-12 relative">
+            {/* Connecting Line */}
+            <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 bg-slate-200 z-0"></div>
+            
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <div className="w-24 h-24 bg-[#e0f2fe] rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-sm">
+                <Smartphone className="h-10 w-10 text-[#0EA5E9]" />
+              </div>
+              <h3 className="text-xl font-bold text-[#1E3A5F] mb-3">1. Patient Clicks Ad</h3>
+              <p className="text-slate-600">A potential patient sees your Meta Ad and clicks "Send Message".</p>
+            </div>
+            
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <div className="w-24 h-24 bg-[#e0f2fe] rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-sm">
+                <Bot className="h-10 w-10 text-[#0EA5E9]" />
+              </div>
+              <h3 className="text-xl font-bold text-[#1E3A5F] mb-3">2. AI Engages on WhatsApp</h3>
+              <p className="text-slate-600">Our bot instantly replies on WhatsApp, answers FAQs, and qualifies the lead.</p>
+            </div>
+            
+            <div className="relative z-10 flex flex-col items-center text-center">
+              <div className="w-24 h-24 bg-[#e0f2fe] rounded-full flex items-center justify-center mb-6 border-4 border-white shadow-sm">
+                <Calendar className="h-10 w-10 text-[#0EA5E9]" />
+              </div>
+              <h3 className="text-xl font-bold text-[#1E3A5F] mb-3">3. Appointment Booked</h3>
+              <p className="text-slate-600">The bot seamlessly schedules the appointment into your existing calendar system.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section id="features" className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-[#1E3A5F]">Powerful Features for Dental Clinics</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { title: "Smart Qualifying", desc: "Filters out low-intent leads and prioritizes high-value treatments like Implants or Aligners." },
+              { title: "Native WhatsApp", desc: "Operates entirely within WhatsApp, the app your patients already use every day." },
+              { title: "No-Show Reduction", desc: "Sends automated WhatsApp reminders 24hrs and 2hrs before the appointment." },
+              { title: "CRM Integration", desc: "Syncs leads seamlessly with your existing CRM or Google Sheets." },
+              { title: "Multilingual", desc: "Can converse in English, Hindi, and regional languages to maximize reach." },
+              { title: "Broadcasts", desc: "Send promotional offers or festive greetings to your entire patient database easily." }
+            ].map((feature, i) => (
+              <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                <CheckCircle className="h-8 w-8 text-[#0EA5E9] mb-4" />
+                <h3 className="text-lg font-bold text-[#1E3A5F] mb-2">{feature.title}</h3>
+                <p className="text-slate-600 text-sm">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-[#1E3A5F]">Trusted by Top Clinics in India</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { name: "Dr. Sharma", clinic: "SmileCare Multispeciality", text: "Vihaanflow AI doubled our appointment bookings from Meta Ads within the first month. Best investment we've made." },
+              { name: "Dr. Patel", clinic: "Pearl Dental", text: "Finally, my front desk can focus on the patients in the clinic instead of answering Facebook messages all day." },
+              { name: "Dr. Reddy", clinic: "Advanced Dental Solutions", text: "The automated follow-ups are a game-changer. We're recovering so many leads that used to just go cold." }
+            ].map((testimonial, i) => (
+              <div key={i} className="bg-slate-50 p-8 rounded-2xl border border-slate-100">
+                <div className="flex text-amber-400 mb-4">
+                  {[...Array(5)].map((_, j) => <Star key={j} className="h-5 w-5 fill-current" />)}
+                </div>
+                <p className="text-slate-700 italic mb-6">"{testimonial.text}"</p>
+                <div>
+                  <p className="font-bold text-[#1E3A5F]">{testimonial.name}</p>
+                  <p className="text-sm text-slate-500">{testimonial.clinic}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-[#1E3A5F]">Simple, Transparent Pricing</h2>
+            <p className="mt-4 text-lg text-slate-600">Choose the plan that fits your clinic's volume.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-center">
+            {/* Starter */}
+            <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-center">
+              <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">Starter</h3>
+              <p className="text-slate-500 mb-6">For single chair clinics</p>
+              <div className="text-4xl font-extrabold text-[#1E3A5F] mb-6">₹4,999<span className="text-lg text-slate-500 font-normal">/mo</span></div>
+              <ul className="text-left space-y-4 mb-8">
+                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-[#0EA5E9] mr-2" /> 500 Conversations/mo</li>
+                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-[#0EA5E9] mr-2" /> Standard AI Responses</li>
+                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-[#0EA5E9] mr-2" /> Google Sheets Integration</li>
+              </ul>
+              <button className="w-full py-3 rounded-xl border border-[#0EA5E9] text-[#0EA5E9] font-semibold hover:bg-[#e0f2fe] transition-colors">
+                Get Started
+              </button>
+            </div>
+            
+            {/* Growth (Middle) */}
+            <div className="bg-[#1E3A5F] p-8 rounded-3xl border border-[#1E3A5F] shadow-xl text-center transform md:-translate-y-4 relative">
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-[#0EA5E9] to-teal-400 text-white px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wide">
+                Most Popular
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Growth</h3>
+              <p className="text-slate-300 mb-6">For busy multi-chair clinics</p>
+              <div className="text-4xl font-extrabold text-white mb-6">₹9,999<span className="text-lg text-slate-300 font-normal">/mo</span></div>
+              <ul className="text-left space-y-4 mb-8 text-slate-100">
+                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-[#0EA5E9] mr-2" /> 2000 Conversations/mo</li>
+                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-[#0EA5E9] mr-2" /> Advanced Lead Qualification</li>
+                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-[#0EA5E9] mr-2" /> CRM & Calendar Integration</li>
+                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-[#0EA5E9] mr-2" /> Automated Follow-ups</li>
+              </ul>
+              <button className="w-full py-3 rounded-xl bg-[#0EA5E9] text-white font-semibold hover:bg-[#0284c7] transition-colors shadow-lg shadow-sky-500/30">
+                Get Started
+              </button>
+            </div>
+            
+            {/* Enterprise */}
+            <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-center">
+              <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">Enterprise</h3>
+              <p className="text-slate-500 mb-6">For dental chains</p>
+              <div className="text-4xl font-extrabold text-[#1E3A5F] mb-6">Custom</div>
+              <ul className="text-left space-y-4 mb-8">
+                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-[#0EA5E9] mr-2" /> Unlimited Conversations</li>
+                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-[#0EA5E9] mr-2" /> Custom AI Training</li>
+                <li className="flex items-center"><CheckCircle className="h-5 w-5 text-[#0EA5E9] mr-2" /> Priority API Support</li>
+              </ul>
+              <button className="w-full py-3 rounded-xl border border-[#0EA5E9] text-[#0EA5E9] font-semibold hover:bg-[#e0f2fe] transition-colors">
+                Contact Sales
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 bg-white">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-[#1E3A5F]">Frequently Asked Questions</h2>
+          </div>
+          
+          <div className="space-y-4">
+            {[
+              { q: "Do I need to be technically skilled to use this?", a: "Not at all. We handle the entire setup, integration with Meta Ads, and AI training. You just sit back and watch appointments flow in." },
+              { q: "Is it approved by WhatsApp?", a: "Yes, we use the official WhatsApp Cloud API, ensuring your number is completely safe and compliant with Meta's policies." },
+              { q: "Can the AI speak regional languages?", a: "Yes! Our bot can comfortably switch between English, Hindi, and several other regional languages based on the user's input." },
+              { q: "What happens if the AI can't answer a question?", a: "The bot is trained to gracefully hand over the conversation to a human agent (your receptionist) if it encounters a complex medical question." },
+              { q: "How long does it take to go live?", a: "Typically, we can get your clinic fully integrated and live within 48 to 72 hours." }
+            ].map((faq, i) => (
+              <div key={i} className="border border-slate-200 rounded-lg overflow-hidden">
+                <button 
+                  className="w-full text-left px-6 py-4 bg-slate-50 hover:bg-slate-100 flex justify-between items-center font-semibold text-[#1E3A5F] transition-colors"
+                  onClick={() => toggleFaq(i)}
+                >
+                  {faq.q}
+                  <ChevronDown className={cn("h-5 w-5 text-slate-500 transition-transform", openFaq === i ? "rotate-180" : "")} />
+                </button>
+                {openFaq === i && (
+                  <div className="px-6 py-4 bg-white text-slate-600">
+                    {faq.a}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact / CTA */}
+      <section id="contact" className="py-24 bg-slate-950 relative overflow-hidden">
+        {/* Abstract shapes */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-[100px]" />
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Automate Your Clinic's Growth?</h2>
+          <p className="text-xl text-slate-400 mb-10">Stop losing leads to competitors. Book a quick 15-minute demo to see Vihaanflow AI in action.</p>
+          
+          <form className="bg-slate-900 border border-slate-800 rounded-2xl p-8 max-w-xl mx-auto shadow-2xl relative" onSubmit={handleDemoSubmit}>
+            {formState.submitted && (
+              <div className="absolute inset-0 bg-slate-900/95 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center z-20">
+                <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mb-4">
+                  <CheckCircle className="h-8 w-8 text-emerald-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">Demo Requested!</h3>
+                <p className="text-slate-400 text-center max-w-sm">Our team will reach out to you shortly to schedule the demo.</p>
+              </div>
+            )}
+            <h3 className="text-2xl font-bold text-white mb-6">Book Your Free Demo</h3>
+            <div className="space-y-4 text-left">
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-1">Clinic Name</label>
+                <input 
+                  type="text" 
+                  value={formState.clinicName}
+                  onChange={e => setFormState({...formState, clinicName: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all placeholder:text-slate-600" 
+                  placeholder="e.g. SmileCare Dental" 
+                  required 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-1">Your Name</label>
+                <input 
+                  type="text" 
+                  value={formState.name}
+                  onChange={e => setFormState({...formState, name: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all placeholder:text-slate-600" 
+                  placeholder="e.g. Dr. Sharma" 
+                  required 
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-400 mb-1">WhatsApp Number</label>
+                <input 
+                  type="tel" 
+                  value={formState.phone}
+                  onChange={e => setFormState({...formState, phone: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all placeholder:text-slate-600" 
+                  placeholder="+91 98765 43210" 
+                  required 
+                />
+              </div>
+              <button 
+                type="submit" 
+                disabled={formState.loading}
+                className="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:from-sky-400 hover:to-blue-500 transition-all shadow-lg shadow-sky-500/25 mt-4 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {formState.loading ? (
+                  <>
+                    <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Submitting...
+                  </>
+                ) : (
+                  "Schedule Demo Now"
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-4 gap-8">
+          <div className="col-span-2">
+            <div className="flex items-center mb-4">
+              <Stethoscope className="h-8 w-8 text-[#0EA5E9]" />
+              <span className="ml-2 text-xl font-bold text-white">Vihaanflow AI</span>
+            </div>
+            <p className="max-w-md">The smartest WhatsApp AI chatbot specifically engineered for dental clinics in India to convert Meta Ads into confirmed bookings.</p>
+          </div>
+          <div>
+            <h4 className="text-white font-semibold mb-4">Product</h4>
+            <ul className="space-y-2">
+              <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+              <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
+              <li><a href="#how-it-works" className="hover:text-white transition-colors">How it Works</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white font-semibold mb-4">Company</h4>
+            <ul className="space-y-2">
+              <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-slate-800 text-sm text-center">
+          &copy; {new Date().getFullYear()} Vihaanflow AI. All rights reserved.
+        </div>
+      </footer>
+
+      {/* Floating WhatsApp Button */}
+      <a 
+        href="#" 
+        className="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 flex items-center justify-center"
+        aria-label="Chat with us on WhatsApp"
+      >
+        <MessageCircle className="h-8 w-8" />
+      </a>
+    </div>
+  );
+}
