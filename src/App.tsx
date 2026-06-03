@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Boxes } from "@/components/ui/background-boxes";
+import { SplineScene } from "@/components/ui/splite";
+import { Spotlight } from "@/components/ui/spotlight";
 import { cn } from "@/lib/utils";
 import {
   Menu,
@@ -81,21 +82,21 @@ export default function App() {
   return (
     <div className="font-sans text-slate-800 bg-slate-50 min-h-screen">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-zinc-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Stethoscope className="h-8 w-8 text-[#0EA5E9]" />
-              <span className="ml-2 text-xl font-bold text-[#1E3A5F]">Vihaanflow AI</span>
+              <Stethoscope className="h-8 w-8 text-orange-500" />
+              <span className="ml-2 text-xl font-bold text-zinc-900">Vihaanflow AI</span>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#problem" className="text-slate-600 hover:text-[#0EA5E9]">The Problem</a>
-              <a href="#how-it-works" className="text-slate-600 hover:text-[#0EA5E9]">How it Works</a>
-              <a href="#features" className="text-slate-600 hover:text-[#0EA5E9]">Features</a>
-              <a href="#pricing" className="text-slate-600 hover:text-[#0EA5E9]">Pricing</a>
+              <a href="#problem" className="text-zinc-600 hover:text-orange-500 transition-colors">The Problem</a>
+              <a href="#how-it-works" className="text-zinc-600 hover:text-orange-500 transition-colors">How it Works</a>
+              <a href="#features" className="text-zinc-600 hover:text-orange-500 transition-colors">Features</a>
+              <a href="#pricing" className="text-zinc-600 hover:text-orange-500 transition-colors">Pricing</a>
               <a
                 href="#contact"
-                className="bg-[#0EA5E9] text-white px-5 py-2 rounded-full font-medium hover:bg-[#0284c7] transition-colors"
+                className="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-5 py-2 rounded-full font-medium hover:from-amber-400 hover:to-orange-500 transition-all shadow-md shadow-orange-500/20"
               >
                 Book a Demo
               </a>
@@ -109,12 +110,12 @@ export default function App() {
         </div>
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1">
-            <a href="#problem" className="block px-3 py-2 text-slate-600">The Problem</a>
-            <a href="#how-it-works" className="block px-3 py-2 text-slate-600">How it Works</a>
-            <a href="#features" className="block px-3 py-2 text-slate-600">Features</a>
-            <a href="#pricing" className="block px-3 py-2 text-slate-600">Pricing</a>
-            <a href="#contact" className="block px-3 py-2 mt-4 text-center bg-[#0EA5E9] text-white rounded-full font-medium">
+          <div className="md:hidden bg-white border-b border-zinc-200 px-4 pt-2 pb-4 space-y-1 shadow-lg">
+            <a href="#problem" className="block px-3 py-2 text-zinc-600 hover:text-orange-500">The Problem</a>
+            <a href="#how-it-works" className="block px-3 py-2 text-zinc-600 hover:text-orange-500">How it Works</a>
+            <a href="#features" className="block px-3 py-2 text-zinc-600 hover:text-orange-500">Features</a>
+            <a href="#pricing" className="block px-3 py-2 text-zinc-600 hover:text-orange-500">Pricing</a>
+            <a href="#contact" className="block px-3 py-2 mt-4 text-center bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-full font-medium shadow-md">
               Book a Demo
             </a>
           </div>
@@ -122,18 +123,24 @@ export default function App() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-slate-950 flex flex-col items-center justify-center min-h-[90vh]">
-        <div className="absolute inset-0 w-full h-full bg-slate-950 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
-        <Boxes />
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-black flex flex-col items-center justify-center min-h-[90vh]">
+        <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="white" />
+        <div className="absolute inset-0 w-full h-full z-10 pointer-events-auto">
+          <SplineScene 
+            scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+            className="w-full h-full opacity-80 md:translate-x-1/4"
+          />
+        </div>
+        <div className="absolute inset-0 w-full h-full bg-black/40 z-20 pointer-events-none" />
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-30 text-center flex flex-col items-center">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 relative z-30 text-left flex flex-col items-start">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 backdrop-blur-sm text-slate-300 text-sm font-medium mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-800/50 border border-zinc-700 backdrop-blur-sm text-zinc-300 text-sm font-medium mb-8"
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
             Now accepting new clinics
           </motion.div>
 
@@ -141,16 +148,18 @@ export default function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 tracking-tight max-w-5xl mx-auto mb-6 leading-tight"
+            className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-white via-zinc-200 to-zinc-400 tracking-tight max-w-3xl mb-6 leading-[1.1] drop-shadow-sm"
           >
-            Turn Meta Ads into <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-600">Booked Appointments</span> on Autopilot.
+            Turn Meta Ads into <br className="hidden md:block" />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-500 drop-shadow-md">Booked Appointments</span> <br className="hidden md:block" />
+            on Autopilot.
           </motion.h1>
           
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-10 font-light"
+            className="text-base md:text-lg lg:text-xl text-zinc-300 max-w-xl mb-10 font-light leading-relaxed"
           >
             The AI WhatsApp Chatbot built exclusively for Indian Dental Clinics. Never miss a lead, automate follow-ups, and fill your calendar 24/7.
           </motion.p>
@@ -159,12 +168,12 @@ export default function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto"
+            className="flex flex-col sm:flex-row gap-4 justify-start w-full sm:w-auto"
           >
-            <a href="#contact" className="group relative inline-flex items-center justify-center bg-gradient-to-r from-sky-500 to-blue-600 text-white px-8 py-4 rounded-full font-bold text-lg transition-all shadow-[0_0_40px_-10px_rgba(14,165,233,0.5)] hover:shadow-[0_0_60px_-10px_rgba(14,165,233,0.7)] hover:scale-105">
+            <a href="#contact" className="group relative inline-flex items-center justify-center bg-gradient-to-r from-amber-500 to-orange-600 text-white px-8 py-4 rounded-full font-bold text-lg transition-all shadow-[0_0_40px_-10px_rgba(245,158,11,0.5)] hover:shadow-[0_0_60px_-10px_rgba(245,158,11,0.7)] hover:scale-105">
               Book a Free Demo
             </a>
-            <a href="#how-it-works" className="group inline-flex items-center justify-center bg-slate-800/50 hover:bg-slate-800 text-white border border-slate-700 px-8 py-4 rounded-full font-bold text-lg transition-all backdrop-blur-md hover:scale-105">
+            <a href="#how-it-works" className="group inline-flex items-center justify-center bg-zinc-800/50 hover:bg-zinc-800 text-white border border-zinc-700 px-8 py-4 rounded-full font-bold text-lg transition-all backdrop-blur-md hover:scale-105">
               See How It Works
             </a>
           </motion.div>
@@ -544,7 +553,7 @@ export default function App() {
         
         {/* Main Button */}
         <a 
-          href="https://wa.me/15557787916?text=Hi!%20I%20would%20like%20to%20know%20more%20about%20Vihaanflow%20AI." 
+          href="https://wa.me/917339366166?text=Hi!%20I%20would%20like%20to%20know%20more%20about%20Vihaanflow%20AI." 
           target="_blank"
           rel="noopener noreferrer"
           className="group relative bg-gradient-to-tr from-[#128C7E] to-[#25D366] text-white p-4 rounded-full shadow-2xl hover:shadow-[0_0_40px_-5px_rgba(37,211,102,0.6)] hover:scale-110 transition-all duration-300 flex items-center justify-center"

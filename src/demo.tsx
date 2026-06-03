@@ -1,20 +1,37 @@
-"use client";
+'use client'
 
-import { Boxes } from "@/components/ui/background-boxes"
-import { cn } from "@/lib/utils";
-
-export function BackgroundBoxesDemo() {
+import { SplineScene } from "@/components/ui/splite";
+import { Card } from "@/components/ui/card"
+import { Spotlight } from "@/components/ui/spotlight"
+ 
+export function SplineSceneBasic() {
   return (
-    <div className="h-96 relative w-full overflow-hidden bg-slate-900 flex flex-col items-center justify-center rounded-lg">
-      <div className="absolute inset-0 w-full h-full bg-slate-900 z-20 [mask-image:radial-gradient(transparent,white)] pointer-events-none" />
+    <Card className="w-full h-[500px] bg-black/[0.96] relative overflow-hidden">
+      <Spotlight
+        className="-top-40 left-0 md:left-60 md:-top-20"
+        fill="white"
+      />
+      
+      <div className="flex h-full">
+        {/* Left content */}
+        <div className="flex-1 p-8 relative z-10 flex flex-col justify-center">
+          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400">
+            Interactive 3D
+          </h1>
+          <p className="mt-4 text-neutral-300 max-w-lg">
+            Bring your UI to life with beautiful 3D scenes. Create immersive experiences 
+            that capture attention and enhance your design.
+          </p>
+        </div>
 
-      <Boxes />
-      <h1 className={cn("md:text-4xl text-xl text-white relative z-20")}>
-        Tailwind is Awesome
-      </h1>
-      <p className="text-center mt-2 text-neutral-300 relative z-20">
-        Framer motion is the best animation library ngl
-      </p>
-    </div>
-  );
+        {/* Right content */}
+        <div className="flex-1 relative">
+          <SplineScene 
+            scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+            className="w-full h-full"
+          />
+        </div>
+      </div>
+    </Card>
+  )
 }
